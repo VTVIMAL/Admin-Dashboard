@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { ProSidebar, Menu, MenuItem } from "react-pro-sidebar";
-import "react-pro-sidebar/dist/css/styles.css";
+import { Sidebar, Menu, MenuItem, sidebarClasses } from "react-pro-sidebar";
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import { Link } from "react-router-dom";
 import { tokens } from "../../theme";
@@ -16,6 +15,8 @@ import PieChartOutlineOutlinedIcon from "@mui/icons-material/PieChartOutlineOutl
 import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
+import TranslateIcon from "@mui/icons-material/Translate";
+import KeyboardIcon from '@mui/icons-material/Keyboard';
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
@@ -26,41 +27,51 @@ const Item = ({ title, to, icon, selected, setSelected }) => {
       style={{ color: colors.grey[100] }}
       onClick={() => setSelected(title)}
       icon={icon}
+      component={<Link to={to} />}
     >
       <Typography>{title}</Typography>
-      <Link to={to} />
     </MenuItem>
   );
 };
 
-function Sidebar() {
+const handleRtlClick = () => {
+  var x = document.getElementById("main-div");
+  if (x.dir === "ltr") {
+    x.dir = "rtl";
+  } else {
+    x.dir = "ltr";
+  }
+};
+
+function SidebarNav() {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("Dashboard");
 
   return (
-    <Box
-      sx={{
-        "& .pro-sidebar-inner": {
-          background: `${colors.primary[400]} !important`,
-        },
-        "& .pro-icon-wrapper": {
-          background: "transparent !important",
-        },
-        "& .pro-inner-item": {
-          padding: "5p 35px 20px 5px !important",
-        },
-        "& .pro-inner-item:hover": {
-          color: "#868dfb !important",
-        },
-        "& .pro-menu-item.active": {
-          color: "#6870fa !important",
-        },
-      }}
-    >
-      <ProSidebar collapsed={isCollapsed} style={{ height: "100vh" }}>
-        <Menu iconShape="square">
+    <Box>
+      <Sidebar
+        collapsed={isCollapsed}
+        style={{ height: "max-content" }}
+        rootStyles={{
+          [`.${sidebarClasses.container}`]: {
+            backgroundColor: colors.primary[400],
+          },
+          border: "0",
+        }}
+      >
+        <Menu
+          iconShape="square"
+          menuItemStyles={{
+            button: {
+              [`&:hover`]: {
+                color: "#6870fa !important",
+                backgroundColor: "transparent",
+              },
+            },
+          }}
+        >
           {/* LOGO AND MENU ICON */}
           <MenuItem
             onClick={() => setIsCollapsed(!isCollapsed)}
@@ -88,7 +99,7 @@ function Sidebar() {
             <Box mb="25px">
               <Box display="flex" justifyContent="center" alignItems="center">
                 <img
-                  src={"../..//assets/user.png"}
+                  src={"../..//assets/samurai-admin.jpg"}
                   alt="profile-user"
                   width="100px"
                   height="100px"
@@ -110,25 +121,34 @@ function Sidebar() {
               </Box>
             </Box>
           )}
-
+          {/* Side bar items */}
           <Box paddingLeft={isCollapsed ? undefined : "10%"}>
             <Item
               title="Dashboard"
-              to="/"
+              to={"/"}
               icon={<HomeOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
-            <Typography
+            {/* RTL */}
+            <MenuItem
+              onClick={handleRtlClick}
+              icon={<TranslateIcon />}
+              style={{ color: colors.grey[100] }}
+            >
+              <Typography>RTL</Typography>
+            </MenuItem>
+            {/* <Typography
               variant="h6"
               color={colors.grey[300]}
               sx={{ m: "15px 0 5px 20px" }}
+              textAlign={"center"}
             >
               Data
-            </Typography>
+            </Typography> */}
             <Item
               title="Manage Team"
-              to="/team"
+              to={"/team"}
               icon={<PeopleOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
@@ -147,13 +167,14 @@ function Sidebar() {
               selected={selected}
               setSelected={setSelected}
             />
-            <Typography
+            {/* <Typography
               variant="h6"
               color={colors.grey[300]}
               sx={{ m: "15px 0 5px 20px" }}
+              textAlign={"center"}
             >
               Pages
-            </Typography>
+            </Typography> */}
             <Item
               title="Profile Form"
               to="/form"
@@ -175,13 +196,14 @@ function Sidebar() {
               selected={selected}
               setSelected={setSelected}
             />
-            <Typography
+            {/* <Typography
               variant="h6"
               color={colors.grey[300]}
               sx={{ m: "15px 0 5px 20px" }}
+              textAlign={"center"}
             >
               Charts
-            </Typography>
+            </Typography> */}
             <Item
               title="Bar Chart"
               to="/bar"
@@ -210,11 +232,18 @@ function Sidebar() {
               selected={selected}
               setSelected={setSelected}
             />
+            <Item
+              title="Text Editor"
+              to="/editor"
+              icon={<KeyboardIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
           </Box>
         </Menu>
-      </ProSidebar>
+      </Sidebar>
     </Box>
   );
 }
 
-export default Sidebar;
+export default SidebarNav;

@@ -129,7 +129,7 @@ function Form() {
                     />
                 </Box>
                 <Box display='flex' justifyContent='end' mt='20px'>
-                    <Button type="submit" color="secondary" varient='contained'>
+                    <Button type="submit" color="secondary" varient='contained' style={{border: 'solid'}}>
                         Create New User
                     </Button>
                 </Box>
